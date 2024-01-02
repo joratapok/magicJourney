@@ -1,0 +1,55 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica', cursive;
+}
+body {
+    background: white;
+}
+#canvas1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0;
+    max-width: 100%;
+    max-height: 100%;
+    background: pink;
+}
+.controls {
+    position: absolute;
+    z-index: 10;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+select {
+    width: 100px;
+}
+.controls, select, option {
+    font-size: 20px;
+}
+
+img {
+    display: none;
+}
+
+#slider {
+    width: 100%;
+    background: white;
+}
+#fullScreenButton {
+    position: absolute;
+    font-size: 16px;
+    padding: 6px;
+    top: 10px;
+    right: 20px;
+}
+#loading {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    font-size: 40px;
+}
