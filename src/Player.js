@@ -1,8 +1,10 @@
-import playerImage from './images/wizard.png'
+import playerImage from './images/wizard.png';
 import {
+    ChargeLeft,
+    ChargeRight,
     Diving,
     FallingLeft,
-    FallingRight, Hit,
+    FallingRight, HitRight, HitLeft,
     JumpingLeft,
     JumpingRight, Rolling,
     RunningLeft,
@@ -10,7 +12,7 @@ import {
     SittingLeft,
     SittingRight,
     StandingLeft,
-    StandingRight, states
+    StandingRight,
 } from "./state";
 import {CollisionAnimation} from "./CollisionAnimation";
 import {checkIntersections} from "./helpers/checkIntersections";
@@ -34,7 +36,10 @@ export class Player {
             new FallingLeft(this.game),
             new Rolling(this.game),
             new Diving(this.game),
-            new Hit(this.game),
+            new HitRight(this.game),
+            new HitLeft(this.game),
+            new ChargeRight(this.game),
+            new ChargeLeft(this.game),
         ];
         this.currentState = this.states[0]
         this.image = new Image()
@@ -54,9 +59,21 @@ export class Player {
         this.maxFrame = 0;
         this.speed = 0;
         this.maxSpeed = 4;
+        this.chargeSpeed = 12;
+        this.chargeDistance = 0;
+        this.unvulnerable = false;
+        this.mana = 100;
         this.fps = 20;
         this.frameTimer = 0;
         this.frameInterval = 1000/this.fps
+
+        this.makeUnvulnerable();
+    }
+    makeUnvulnerable() {
+        this.unvulnerable = true;
+        setTimeout(() => {
+            this.unvulnerable = false
+        }, 1000)
     }
     getCollisionPoints() {
         var startX = this.x + this.spriteWidth * this.sizeMultiplier * 0.25
@@ -66,12 +83,14 @@ export class Player {
         return [startX, startY, width, height]
     }
     getFireWallCollisionPoints() {
-        var startX = this.x + 110
+        var isRightSide = this.currentState !== this.states[13];
+        var startX = this.x + (isRightSide ? 110 : -50)
         var width = 50
         var startY = this.y - 20
         var height = this.spriteHeight * this.sizeMultiplier
         return [startX, startY, width, height]
     }
+
     draw(context) {
         if (this.game.debug) {
             context.strokeRect(
@@ -80,6 +99,9 @@ export class Player {
             context.strokeRect(
               ...this.getFireWallCollisionPoints()
             )
+        }
+        if (this.unvulnerable && this.frameX % 2 === 0) {
+            return;
         }
         context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight,
             this.spriteWidth, this.spriteHeight,
@@ -90,7 +112,16 @@ export class Player {
         this.currentState.handleInput(input);
 
         //horizontal movement
-        this.x += this.speed;
+        if (this.chargeDistance > 5) {
+            this.x += this.chargeSpeed;
+            this.chargeDistance -= this.chargeSpeed;
+        } else if (this.chargeDistance < -5) {
+            this.x -= this.chargeSpeed;
+            this.chargeDistance += this.chargeSpeed;
+        } else {
+            this.x += this.speed;
+        }
+
         if(this.x <= 1) {
             this.x = 1
         } else if (this.x > this.gameWidth - this.spriteWidth * 1.5) {
@@ -98,7 +129,9 @@ export class Player {
         }
 
         //vertical movement
-        this.y += this.vy;
+        if (this.chargeDistance <= 5 && this.chargeDistance >= -5) {
+            this.y += this.vy;
+        }
         if (!this.onGround()) {
             this.vy += this.weight;
         } else {
@@ -117,13 +150,22 @@ export class Player {
             this.frameTimer += deltaTime;
         }
 
+        //mana handler
+        if (this.mana < 100 && this.currentState !== this.states[2] && this.currentState !== this.states[3]) {
+            this.mana = this.mana + 0.02
+        }
+
     }
     setState(state) {
         this.currentState = this.states[state];
         this.currentState.enter();
     }
     setGameSpeed(speed) {
-        this.game.speed = this.game.maxSpeed * speed
+        if (speed === 0) {
+            this.game.speed = 0;
+        } else {
+            this.game.speed = this.game.maxSpeed + speed * 0.5
+        }
     }
     onGround() {
         return this.y >= this.gameHeight - this.height - this.game.groundMargin
@@ -131,26 +173,34 @@ export class Player {
     checkCollision() {
         this.game.enemies.forEach(enemy => {
             if (
-              this.currentState === this.states[12] &&
-              checkIntersections(...this.getFireWallCollisionPoints(), ...enemy.getCollisionPoints())) {
+              (this.currentState === this.states[12] || this.currentState === this.states[13])
+              ) {
+                if (!checkIntersections(...this.getFireWallCollisionPoints(), ...enemy.getCollisionPoints())) {
+                    return;
+                }
                 enemy.markedForDeletion = true;
+                this.game.collisions.push(new CollisionAnimation(this.game,
+                  enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5))
                 this.game.score++;
                 return;
             }
+
             if(checkIntersections(...this.getCollisionPoints(), ...enemy.getCollisionPoints())) {
-                enemy.markedForDeletion = true;
-                this.game.collisions.push(new CollisionAnimation(this.game,
-                    enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5))
                 if (
                     this.currentState === this.states[11]
+                  || (this.chargeDistance > 5 || this.chargeDistance < -5)
                 ) {
+                    enemy.markedForDeletion = true;
+                    this.game.collisions.push(new CollisionAnimation(this.game,
+                      enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5))
                     this.game.score++;
-                } else {
-                    //Set hit State
+                } else if (!this.unvulnerable) {
+                    enemy.markedForDeletion = true;
+                    this.game.collisions.push(new CollisionAnimation(this.game,
+                      enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5))
+                    this.makeUnvulnerable();
                     this.game.hp--
-                    // this.setState(states.HIT)
                 }
-
             }
         })
     }

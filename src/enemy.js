@@ -1,5 +1,6 @@
 import imageCloud from './images/enemies/cloud.png'
 import leech from './images/enemies/leech.png'
+import leechReverse from './images/enemies/leechReverse.png'
 import spider from './images/enemies/spider.png'
 import plant from './images/enemies/evilPlant.png'
 
@@ -40,7 +41,7 @@ class Enemy {
         }
 
         //check if off screen
-        if (this.x + this.width < 0) {
+        if (this.x + this.width * 2 < 0) {
             this.markedForDeletion = true;
         }
 
@@ -104,7 +105,7 @@ export class EnemyFlower extends Enemy {
         this.maxFrame = 9
     }
     getCollisionPoints() {
-        var startX = this.x + 28
+        var startX = this.x + 34
         var widthX = this.spriteWidth * 0.7
         var startY = this.y + 20
         var heightY = this.spriteHeight * 0.8
@@ -144,60 +145,75 @@ export class EnemySpider extends Enemy {
         super.draw(context);
         context.beginPath();
         context.moveTo(this.x + this.width / 2,0);
-        context.lineTo(this.x + this.width / 2, this.y + 50);
+        context.lineTo(this.x + this.width / 2, this.y + 30);
         context.stroke();
     }
 
 }
 
-// class Enemy {
-//     constructor(game) {
-//         this.game = game;
-//         this.image = leech;
-//         this.x = this.game.width;
-//         this.y = Math.random() * this.game.height;
-//         this.spriteWidth = 75;
-//         this.spriteHeight = 75;
-//         this.width = this.spriteWidth;
-//         this.height = this.spriteHeight;
-//         this.markedForDeletion = false
-//         this.velosityX = Math.random() * 0.1 + 0.1;
-//         this.frameX = 0;
-//         this.maxFrame = 5;
-//         this.frameInterval = 100;
-//         this.frameTimer = 0;
-//     }
-//     update(deltaTime) {
-//         this.x -= this.velosityX * deltaTime;
-//         if (this.x < 0 - (this.width * 2)
-//             || this.x > (game.width + this.width * 2)
-//             || this.y < (0 - this.height * 2)
-//             || this.y > (game.height + this.height * 2))
-//         {
-//             this.markedForDeletion = true;
-//         }
-//         if (this.frameTimer > this.frameInterval) {
-//             if (this.frameX < this.maxFrame) this.frameX++;
-//             else this.frameX = 0;
-//             this.frameTimer = 0;
-//         } else {
-//             this.frameTimer += deltaTime;
-//         }
-//     }
-//     draw(ctx) {
-//         ctx.drawImage(this.image, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight,
-//             this.x, this.y, this.width, this.height)
-//     }
-// }
-//
-// class Leech extends Enemy {
-//     constructor(game) {
-//         super(game);
-//         this.image = new Image();
-//         this.image.src = 'enemies/leech.png';
-//         this.y = this.game.height - this.height;
-//     }
-// }
+export class EnemyLeech extends Enemy {
+    constructor(game) {
+        super();
+        this.game = game;
+        this.image = new Image();
+        this.image.src = leech;
+        this.x = this.game.width;
+        this.y = this.game.height - this.height - this.game.groundMargin;
+        this.speedX = 0.5
+        this.maxFrame = 5;
+        this.maxSpeed = 2;
+        this.minSpeed = 0.3;
+        this.isGrowing = true;
+    }
+    update(deltaTime) {
+        super.update(deltaTime);
+        if (this.isGrowing && this.maxSpeed > this.speedX) {
+            this.speedX += 0.01;
+        } else if (this.isGrowing && this.maxSpeed <= this.speedX) {
+            this.isGrowing = false;
+        } else if (!this.isGrowing && this.speedX > this.minSpeed) {
+            this.speedX -= 0.1;
+        } else if (!this.isGrowing && this.speedX <= this.minSpeed) {
+            this.isGrowing = true;
+        }
+    }
+}
+
+export class EnemyReverseLeech extends Enemy {
+    constructor(game) {
+        super();
+        this.game = game;
+        this.image = new Image();
+
+        this.image.src = leechReverse;
+        this.x = 0 - this.width;
+        this.y = this.game.height - this.height - this.game.groundMargin;
+        this.speedX = -this.game.maxSpeed
+        this.maxFrame = 5;
+        this.maxSpeed = -this.game.maxSpeed -1;
+        this.minSpeed = -this.game.maxSpeed -0.3;
+        this.isGrowing = true;
+    }
+    update(deltaTime) {
+        super.update(deltaTime);
+        this.x -= this.speedX;
+
+        //check if off screen
+        if (this.x > this.game.width + this.width * 2) {
+            this.markedForDeletion = true;
+        }
+
+        if (this.isGrowing && this.maxSpeed < this.speedX) {
+            this.speedX -= 0.005;
+        } else if (this.isGrowing && this.maxSpeed >= this.speedX) {
+            this.isGrowing = false;
+        } else if (!this.isGrowing && this.speedX < this.minSpeed) {
+            this.speedX += 0.1;
+        } else if (!this.isGrowing && this.speedX >= this.minSpeed) {
+            this.isGrowing = true;
+        }
+    }
+}
 //
 // class Ghost extends Enemy {
 //     constructor(game) {
@@ -219,33 +235,6 @@ export class EnemySpider extends Enemy {
 //         ctx.globalAlpha = 0.7;
 //         super.draw(ctx)
 //         ctx.restore();
-//     }
-// }
-//
-// class Spider extends Enemy {
-//     constructor(game) {
-//         super(game);
-//         this.image = new Image();
-//         this.image.src = 'enemies/spider.png';
-//         this.x = Math.random() * this.game.width;
-//         this.y = 0 - this.height;
-//         this.velosityX = 0;
-//         this.velosityY = Math.random() * 0.1 + 0.1;
-//         this.maxLength = Math.random() * this.game.height;
-//
-//     }
-//     update(deltaTime) {
-//         super.update(deltaTime);
-//         this.y += this.velosityY * deltaTime;
-//         if (this.y > this.maxLength) this.velosityY *= -1;
-//     }
-//     draw(ctx) {
-//         const spiderAss = this.x + this.width/2
-//         ctx.beginPath();
-//         ctx.moveTo(spiderAss, 0)
-//         ctx.lineTo(spiderAss, this.y + 30)
-//         ctx.stroke();
-//         super.draw(ctx);
 //     }
 // }
 //
