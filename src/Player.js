@@ -62,6 +62,7 @@ export class Player {
         this.chargeSpeed = 12;
         this.chargeDistance = 0;
         this.unvulnerable = false;
+        this.hp = 5;
         this.mana = 100;
         this.fps = 20;
         this.frameTimer = 0;
@@ -75,9 +76,20 @@ export class Player {
             this.unvulnerable = false
         }, 1000)
     }
+    restoreMana() {
+        this.mana = 100;
+    }
+    decreaseHP() {
+        this.makeUnvulnerable();
+        this.hp--
+    }
+    addHP() {
+        this.hp++
+    }
+
     getCollisionPoints() {
         var startX = this.x + this.spriteWidth * this.sizeMultiplier * 0.25
-        var width = 75 * this.sizeMultiplier * 0.5
+        var width = this.spriteWidth * this.sizeMultiplier * 0.45
         var startY = this.y + this.spriteHeight * this.sizeMultiplier * 0.25
         var height = this.spriteHeight * this.sizeMultiplier * 0.5
         return [startX, startY, width, height]
@@ -198,8 +210,7 @@ export class Player {
                     enemy.markedForDeletion = true;
                     this.game.collisions.push(new CollisionAnimation(this.game,
                       enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5))
-                    this.makeUnvulnerable();
-                    this.game.hp--
+                    this.decreaseHP();
                 }
             }
         })

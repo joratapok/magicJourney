@@ -4,7 +4,7 @@ import leechReverse from './images/enemies/leechReverse.png'
 import spider from './images/enemies/spider.png'
 import plant from './images/enemies/evilPlant.png'
 
-class Enemy {
+export class RenderObject {
     constructor() {
         this.spriteWidth = 75;
         this.spriteHeight = 75;
@@ -58,7 +58,7 @@ class Enemy {
     }
 }
 
-export class EnemyCloud extends Enemy {
+export class EnemyCloud extends RenderObject {
     constructor(game) {
         super();
         this.game = game;
@@ -90,7 +90,7 @@ export class EnemyCloud extends Enemy {
     }
 }
 
-export class EnemyFlower extends Enemy {
+export class EnemyFlower extends RenderObject {
     constructor(game) {
         super();
         this.spriteWidth = 114;
@@ -113,7 +113,7 @@ export class EnemyFlower extends Enemy {
     }
 }
 
-export class EnemySpider extends Enemy {
+export class EnemySpider extends RenderObject {
     constructor(game) {
         super();
         this.game = game;
@@ -151,7 +151,7 @@ export class EnemySpider extends Enemy {
 
 }
 
-export class EnemyLeech extends Enemy {
+export class EnemyLeech extends RenderObject {
     constructor(game) {
         super();
         this.game = game;
@@ -164,6 +164,13 @@ export class EnemyLeech extends Enemy {
         this.maxSpeed = 2;
         this.minSpeed = 0.3;
         this.isGrowing = true;
+    }
+    getCollisionPoints() {
+        var startX = this.x + 6
+        var widthX = this.spriteWidth * 0.9
+        var startY = this.y + 12
+        var heightY = this.spriteHeight * 0.7
+        return [startX, startY, widthX, heightY]
     }
     update(deltaTime) {
         super.update(deltaTime);
@@ -179,7 +186,7 @@ export class EnemyLeech extends Enemy {
     }
 }
 
-export class EnemyReverseLeech extends Enemy {
+export class EnemyReverseLeech extends RenderObject {
     constructor(game) {
         super();
         this.game = game;
@@ -193,6 +200,13 @@ export class EnemyReverseLeech extends Enemy {
         this.maxSpeed = -this.game.maxSpeed -1;
         this.minSpeed = -this.game.maxSpeed -0.3;
         this.isGrowing = true;
+    }
+    getCollisionPoints() {
+        var startX = this.x + 6
+        var widthX = this.spriteWidth * 0.9
+        var startY = this.y + 12
+        var heightY = this.spriteHeight * 0.7
+        return [startX, startY, widthX, heightY]
     }
     update(deltaTime) {
         super.update(deltaTime);

@@ -6,6 +6,7 @@ import {drawStatusText} from "./utils";
 import {Background} from "./back";
 import {EnemySpider, EnemyCloud, EnemyFlower, EnemyLeech, EnemyReverseLeech} from "./enemy";
 import {UI} from "./UI";
+import {BonusHP, BonusMana} from "./Bonus";
 
 window.addEventListener('load', () => {
     const loading = document.getElementById('loading');
@@ -24,6 +25,7 @@ window.addEventListener('load', () => {
             this.groundMargin = 75;
             this.speed = 0;
             this.maxSpeed = 0.5;
+            this.maxSpeedMultiplier = 0.3;
             this.player = new Player(this);
             this.input = new InputHandler(this);
             this.background = new Background(this)
@@ -31,16 +33,18 @@ window.addEventListener('load', () => {
             this.enemies = [];
             this.particles = [];
             this.collisions = [];
+            this.bonuses = [];
             this.maxParticles = 50;
             this.enemyTimer = 0;
             this.enemyInterval = 1000;
+            this.bunusTimer = 0;
+            this.bonusInterval = (Math.floor(Math.random() * 10) + 20) * 1000;
             this.debug = false;
             this.score = 0;
-            this.hp = 5;
             this.fontColor = 'black';
             this.time = 0;
             this.level = 1;
-            this.levelUpSeconds = 20;
+            this.levelUpSeconds = 30;
             this.isFinished = false;
 
             this.player.currentState.enter();
@@ -69,6 +73,23 @@ window.addEventListener('load', () => {
                 }
             })
 
+            //handle bonuses
+            if (this.bunusTimer > this.bonusInterval) {
+
+                this.addBonus();
+                this.bonusInterval = (Math.floor(Math.random() * 10) + 20 - (this.level * 2)) * 1000;
+
+                this.bunusTimer = 0;
+            } else {
+                this.bunusTimer += deltaTime;
+            }
+            this.bonuses.forEach((bonus, index) => {
+                bonus.update();
+                if (bonus.markedForDeletion) {
+                    this.bonuses.splice(index, 1);
+                }
+            })
+
             //handle particles
             this.particles.forEach((particle, index) => {
                 particle.update();
@@ -77,7 +98,7 @@ window.addEventListener('load', () => {
                 }
             })
             if (this.particles.length > this.maxParticles) {
-                this.particles. length = this.maxParticles
+                this.particles.length = this.maxParticles
             }
 
             //handle collision sprites
@@ -89,14 +110,14 @@ window.addEventListener('load', () => {
             })
 
             //check HP
-            if (this.hp <= 0) {
+            if (this.player.hp <= 0) {
                 this.isFinished = true;
             }
 
             //increase gameSpeed
             if (Math.round(this.time / 1000) / this.levelUpSeconds > this.level) {
                 this.level += 1;
-                this.maxSpeed += 0.5
+                this.maxSpeed += this.maxSpeedMultiplier;
             }
         }
         draw(context) {
@@ -112,6 +133,9 @@ window.addEventListener('load', () => {
             this.collisions.forEach(explode => {
                 explode.draw(context);
             })
+            this.bonuses.forEach(bonus => {
+                bonus.draw(context);
+            })
             this.ui.draw(context);
         }
         addEnemies() {
@@ -125,16 +149,14 @@ window.addEventListener('load', () => {
 
             var index = Math.floor(Math.random() * enemiesList.length);
             this.enemies.push(new enemiesList[index](this))
-
-
-            // if (this.speed > 0 && Math.random() < 0.5) {
-            //     this.enemies.push(new EnemyFlower(this));
-            // } else if (this.speed > 0) {
-            //     this.enemies.push(new EnemySpider(this));
-            // }
-            // this.enemies.push(new EnemyReverseLeech(this))
-            // this.enemies.push(new EnemyLeech(this))
-            // this.enemies.push(new EnemyCloud(this));
+        }
+        addBonus() {
+            var bonusList = [
+              BonusMana,
+              BonusHP
+            ]
+            var index = Math.floor(Math.random() * bonusList.length);
+            this.bonuses.push(new bonusList[index](this))
         }
     }
 
