@@ -5,5 +5,6 @@ export const KEYS = {
   right: 'ArrowRight',
   fire: 'Control',
   charge: ' ',
+  pause: ['p', 'з'],
   debug_mode: 'd',
 }

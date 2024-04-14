@@ -45,12 +45,16 @@ window.addEventListener('load', () => {
             this.time = 0;
             this.level = 1;
             this.levelUpSeconds = 30;
+            this.paused = false;
             this.isFinished = false;
 
             this.player.currentState.enter();
         }
         update(deltaTime) {
             if (deltaTime > 2000) {
+                return;
+            }
+            if (this.paused) {
                 return;
             }
             this.background.update();

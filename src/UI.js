@@ -1,5 +1,4 @@
 import heartIcon from './images/icons/heart.png';
-import {KEYS} from "./constants/keys";
 
 export class UI {
     constructor(game) {
@@ -19,14 +18,14 @@ export class UI {
         context.font = this.fontSize + 'px' + this.fontFamily;
         context.textAlign = 'left';
         context.fillStyle = this.game.fontColor;
-        context.fillText('Счет ' + this.game.score, 20, 20);
+        // context.fillText('Счет ' + this.game.score, 20, 20);
 
         Array(this.game.player.hp).fill(0).forEach((_, i) => {
             context.drawImage(this.heartIcon, 50 * i + 20, 30, 40, 40)
         })
 
         context.fillText('Уровень ' + this.game.level, this.game.width - 150, 20)
-        // context.fillText('time ' + this.game.time, this.game.width / 2, 50)
+        context.fillText((this.game.time/1000).toFixed(), this.game.width / 2, 50)
         context.strokeRect(20, 80, 122, 27)
         context.fillStyle = '#0054a6'
         context.fillRect(21, 81, Math.round(this.game.player.mana * 1.2), 25);
@@ -67,13 +66,12 @@ class DrawButton {
         }
     }
 }
-//←↑→↓
 
 class DrawButtonsBar {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.arrowBarX = this.x + 200;
+        this.arrowBarX = this.x + 250;
         this.buttonWidth = 40
         this.gap = 10;
         this.leftArrowButton = new DrawButton(this.arrowBarX, this.y + this.buttonWidth + this.gap, this.buttonWidth, this.buttonWidth, '←');
@@ -81,7 +79,7 @@ class DrawButtonsBar {
         this.rightArrowButton = new DrawButton(this.arrowBarX + this.buttonWidth * 2 + this.gap * 2, this.y + this.buttonWidth + this.gap, this.buttonWidth, this.buttonWidth, '→');
         this.upArrowButton = new DrawButton(this.arrowBarX + this.buttonWidth + this.gap, this.y, this.buttonWidth, this.buttonWidth, '↑');
         this.fireButton = new DrawButton(this.x, this.y, 60, this.buttonWidth, 'Ctrl',  ' - Firewall');
-        this.chargeButton = new DrawButton(this.x, this.y + this.buttonWidth + this.gap, 60, this.buttonWidth, KEYS.charge, ' - Charge');
+        this.chargeButton = new DrawButton(this.x, this.y + this.buttonWidth + this.gap, 100, this.buttonWidth, 'Space', ' - Charge');
     }
     draw(ctx) {
         this.leftArrowButton.draw(ctx);

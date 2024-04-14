@@ -15,6 +15,8 @@ export class InputHandler {
                 this.keys.push(e.key);
             } else if (e.key === KEYS.debug_mode) {
                 this.game.debug = !this.game.debug;
+            } else if (KEYS.pause.some(key => e.key === key)) {
+                this.game.paused = !this.game.paused;
             }
         })
         window.addEventListener('keyup', e => {
