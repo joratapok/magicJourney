@@ -1,4 +1,5 @@
 import {Dust, DustLittle, Fire, FireWall, Splash} from "./Particle";
+import {KEYS} from './constants/keys';
 
 export const states = {
     STANDING_RIGHT: 0,
@@ -39,19 +40,19 @@ export class StandingLeft extends State {
     }
     handleInput(input) {
         if (
-            input.keys.includes('ArrowLeft') &&
-            input.keys.includes('ArrowRight'))
+            input.keys.includes(KEYS.left) &&
+            input.keys.includes(KEYS.right))
         {
             this.game.player.setState(states.STANDING_RIGHT)
-        } else if (input.keys.includes('ArrowLeft')) {
+        } else if (input.keys.includes(KEYS.left)) {
             this.game.player.setState(states.RUNNING_LEFT)
-        } else if (input.keys.includes('ArrowRight')) {
+        } else if (input.keys.includes(KEYS.right)) {
             this.game.player.setState(states.RUNNING_RIGHT)
-        } else if (input.keys.includes('ArrowDown')) {
+        } else if (input.keys.includes(KEYS.down)) {
             this.game.player.setState(states.SITTING_LEFT)
-        } else if (input.keys.includes('ArrowUp')) {
+        } else if (input.keys.includes(KEYS.up)) {
             this.game.player.setState(states.JUMPING_LEFT)
-        } else if (input.keys.includes('z')) {
+        } else if (input.keys.includes(KEYS.fire)) {
             this.game.player.setState(states.HIT_LEFT)
         }
     }
@@ -77,21 +78,21 @@ export class StandingRight extends State {
         }
 
         if (
-            input.keys.includes('ArrowLeft') &&
-            input.keys.includes('ArrowRight'))
+            input.keys.includes(KEYS.left) &&
+            input.keys.includes(KEYS.right))
         {
             return
-        } else if (input.keys.includes('x')) {
+        } else if (input.keys.includes(KEYS.charge)) {
             this.game.player.setState(states.CHARGE_RIGHT)
-        } else if (input.keys.includes('ArrowLeft')) {
+        } else if (input.keys.includes(KEYS.left)) {
             this.game.player.setState(states.RUNNING_LEFT)
-        } else if (input.keys.includes('ArrowRight')) {
+        } else if (input.keys.includes(KEYS.right)) {
             this.game.player.setState(states.RUNNING_RIGHT)
-        } else if (input.keys.includes('ArrowDown')) {
+        } else if (input.keys.includes(KEYS.down)) {
             this.game.player.setState(states.SITTING_RIGHT)
-        } else if (input.keys.includes('ArrowUp')) {
+        } else if (input.keys.includes(KEYS.up)) {
             this.game.player.setState(states.JUMPING_RIGHT)
-        } else if (input.keys.includes('z')) {
+        } else if (input.keys.includes(KEYS.fire)) {
             this.game.player.setState(states.HIT_RIGHT)
         }
     }
@@ -110,17 +111,17 @@ export class SittingLeft extends State {
     }
     handleInput(input) {
         if (
-            input.keys.includes('ArrowLeft') &&
-            input.keys.includes('ArrowRight'))
+            input.keys.includes(KEYS.left) &&
+            input.keys.includes(KEYS.right))
         {
             return
-        } else if (input.keys.indexOf('ArrowDown') === -1) {
+        } else if (input.keys.indexOf(KEYS.down) === -1) {
             this.game.player.setState(states.STANDING_RIGHT)
-        } else if (input.keys.includes('z')) {
+        } else if (input.keys.includes(KEYS.fire)) {
             this.game.player.setState(states.HIT_LEFT)
-        } else if (input.keys.includes('x')) {
+        } else if (input.keys.includes(KEYS.charge)) {
             this.game.player.setState(states.CHARGE_LEFT)
-        } else if (input.keys.includes('ArrowRight')) {
+        } else if (input.keys.includes(KEYS.right)) {
             this.game.player.setState(states.SITTING_RIGHT)
         }
     }
@@ -138,17 +139,17 @@ export class SittingRight extends State {
     }
     handleInput(input) {
         if (
-            input.keys.includes('ArrowLeft') &&
-            input.keys.includes('ArrowRight'))
+            input.keys.includes(KEYS.left) &&
+            input.keys.includes(KEYS.right))
         {
             return
-        } else if (input.keys.indexOf('ArrowDown') === -1) {
+        } else if (input.keys.indexOf(KEYS.down) === -1) {
             this.game.player.setState(states.STANDING_RIGHT)
-        } else if (input.keys.includes('z')) {
+        } else if (input.keys.includes(KEYS.fire)) {
             this.game.player.setState(states.HIT_RIGHT)
-        } else if (input.keys.includes('x')) {
+        } else if (input.keys.includes(KEYS.charge)) {
             this.game.player.setState(states.CHARGE_RIGHT)
-        } else if (input.keys.includes('ArrowLeft')) {
+        } else if (input.keys.includes(KEYS.left)) {
             this.game.player.setState(states.SITTING_LEFT)
         }
     }
@@ -170,22 +171,22 @@ export class RunningRight extends State {
             this.game.player.x + this.game.player.width*0.5,
             this.game.player.y + this.game.player.height * 0.8));
 
-        if (input.keys.indexOf('ArrowRight') === -1) {
+        if (input.keys.indexOf(KEYS.right) === -1) {
             this.game.player.setState(states.STANDING_RIGHT)
         } else if (
-            input.keys.includes('ArrowRight') &&
-            input.keys.includes('ArrowLeft'))
+            input.keys.includes(KEYS.right) &&
+            input.keys.includes(KEYS.left))
         {
             this.game.player.setState(states.STANDING_RIGHT)
-        } else if (input.keys.includes('x')) {
+        } else if (input.keys.includes(KEYS.charge)) {
             this.game.player.setState(states.CHARGE_RIGHT)
-        } else if (input.keys.includes('ArrowLeft')) {
+        } else if (input.keys.includes(KEYS.left)) {
             this.game.player.setState(states.RUNNING_LEFT)
-        } else if (input.keys.includes('ArrowDown')) {
+        } else if (input.keys.includes(KEYS.down)) {
             this.game.player.setState(states.SITTING_RIGHT)
-        } else if (input.keys.includes('ArrowUp')) {
+        } else if (input.keys.includes(KEYS.up)) {
             this.game.player.setState(states.JUMPING_RIGHT)
-        } else if (input.keys.includes('z')) {
+        } else if (input.keys.includes(KEYS.fire)) {
             this.game.player.setState(states.HIT_RIGHT)
         }
     }
@@ -207,22 +208,22 @@ export class RunningLeft extends State {
             this.game.player.x + this.game.player.width * 0.65,
             this.game.player.y + this.game.player.height * 0.8));
 
-        if (input.keys.indexOf('ArrowLeft') === -1) {
+        if (input.keys.indexOf(KEYS.left) === -1) {
             this.game.player.setState(states.STANDING_RIGHT)
         } else if (
-            input.keys.includes('ArrowRight') &&
-            input.keys.includes('ArrowLeft'))
+            input.keys.includes(KEYS.right) &&
+            input.keys.includes(KEYS.left))
         {
             this.game.player.setState(states.STANDING_RIGHT)
-        } else if (input.keys.includes('x')) {
+        } else if (input.keys.includes(KEYS.charge)) {
             this.game.player.setState(states.CHARGE_LEFT)
-        } else if (input.keys.includes('ArrowRight')) {
+        } else if (input.keys.includes(KEYS.right)) {
             this.game.player.setState(states.RUNNING_RIGHT)
-        } else if (input.keys.includes('ArrowDown')) {
+        } else if (input.keys.includes(KEYS.down)) {
             this.game.player.setState(states.SITTING_LEFT)
-        } else if (input.keys.includes('ArrowUp')) {
+        } else if (input.keys.includes(KEYS.up)) {
             this.game.player.setState(states.JUMPING_LEFT)
-        } else if (input.keys.includes('z')) {
+        } else if (input.keys.includes(KEYS.fire)) {
             this.game.player.setState(states.HIT_LEFT)
         }
     }
@@ -244,21 +245,21 @@ export class JumpingRight extends State {
     }
     handleInput(input) {
         if (
-            input.keys.includes('ArrowLeft') &&
-            input.keys.includes('ArrowRight')) {
+            input.keys.includes(KEYS.left) &&
+            input.keys.includes(KEYS.right)) {
             return
         }
         if (this.game.player.onGround()) {
             this.game.player.setState(states.STANDING_RIGHT)
-        } else if (input.keys.includes('x')) {
+        } else if (input.keys.includes(KEYS.charge)) {
             this.game.player.setState(states.CHARGE_RIGHT)
         } else if (this.game.player.vy > 0) {
             this.game.player.setState(states.FALLING_RIGHT)
-        } else if (!input.keys.includes('ArrowUp')) {
+        } else if (!input.keys.includes(KEYS.up)) {
             this.game.player.vy = 0
-        } else if (input.keys.includes('ArrowDown')) {
+        } else if (input.keys.includes(KEYS.down)) {
             this.game.player.setState(states.DIVING)
-        } else if (input.keys.includes('ArrowLeft')) {
+        } else if (input.keys.includes(KEYS.left)) {
             this.game.player.setState(states.JUMPING_LEFT)
         } else {
             this.jumpHandler.handle(input);
@@ -283,21 +284,21 @@ export class JumpingLeft extends State {
     }
     handleInput(input) {
         if (
-            input.keys.includes('ArrowLeft') &&
-            input.keys.includes('ArrowRight')) {
+            input.keys.includes(KEYS.left) &&
+            input.keys.includes(KEYS.right)) {
             return
         }
         if (this.game.player.onGround()) {
             this.game.player.setState(states.STANDING_RIGHT)
-        } else if (input.keys.includes('x')) {
+        } else if (input.keys.includes(KEYS.charge)) {
             this.game.player.setState(states.CHARGE_LEFT)
         }  else if (this.game.player.vy > 0) {
             this.game.player.setState(states.FALLING_LEFT)
-        } else if (!input.keys.includes('ArrowUp')) {
+        } else if (!input.keys.includes(KEYS.up)) {
             this.game.player.vy = 0
-        } else if (input.keys.includes('ArrowDown')) {
+        } else if (input.keys.includes(KEYS.down)) {
             this.game.player.setState(states.DIVING)
-        } else if (input.keys.includes('ArrowRight')) {
+        } else if (input.keys.includes(KEYS.right)) {
             this.game.player.setState(states.JUMPING_LEFT)
         } else {
             this.jumpHandler.handle(input);
@@ -318,17 +319,17 @@ export class FallingRight extends State {
     }
     handleInput(input) {
         if (
-            input.keys.includes('ArrowLeft') &&
-            input.keys.includes('ArrowRight')) {
+            input.keys.includes(KEYS.left) &&
+            input.keys.includes(KEYS.right)) {
             return
         }
         if (this.game.player.onGround()) {
             this.game.player.setState(states.STANDING_RIGHT)
-        } else if (input.keys.includes('x')) {
+        } else if (input.keys.includes(KEYS.charge)) {
             this.game.player.setState(states.CHARGE_RIGHT)
-        } else if (input.keys.includes('ArrowDown')) {
+        } else if (input.keys.includes(KEYS.down)) {
             this.game.player.setState(states.DIVING)
-        } else if (input.keys.includes('ArrowLeft')) {
+        } else if (input.keys.includes(KEYS.left)) {
             this.game.player.setState(states.FALLING_LEFT)
         } else {
             this.jumpHandler.handle(input);
@@ -350,17 +351,17 @@ export class FallingLeft extends State {
     }
     handleInput(input) {
         if (
-            input.keys.includes('ArrowLeft') &&
-            input.keys.includes('ArrowRight')) {
+            input.keys.includes(KEYS.left) &&
+            input.keys.includes(KEYS.right)) {
             return
         }
         if (this.game.player.onGround()) {
             this.game.player.setState(states.STANDING_RIGHT)
-        } else if (input.keys.includes('x')) {
+        } else if (input.keys.includes(KEYS.charge)) {
             this.game.player.setState(states.CHARGE_LEFT)
-        } else if (input.keys.includes('ArrowDown')) {
+        } else if (input.keys.includes(KEYS.down)) {
             this.game.player.setState(states.DIVING)
-        } else if (input.keys.includes('ArrowRight')) {
+        } else if (input.keys.includes(KEYS.right)) {
             this.game.player.setState(states.FALLING_RIGHT)
         } else {
             this.jumpHandler.handle(input);
@@ -400,7 +401,7 @@ export class Diving extends State {
                 this.game.particles.unshift(new Splash(this.game,
                     this.game.player.x, this.game.player.y))
             }
-        } else if (!input.keys.includes('ArrowDown')) {
+        } else if (!input.keys.includes(KEYS.down)) {
             this.game.player.setState(states.FALLING_RIGHT)
         }
     }
@@ -417,9 +418,9 @@ export class Rolling extends State {
         this.game.player.setGameSpeed(this.game.player.maxSpeed);
     }
     handleInput(input) {
-        if (!input.keys.includes('z') && this.game.player.onGround()) {
+        if (!input.keys.includes(KEYS.fire) && this.game.player.onGround()) {
             this.game.player.setState(states.RUNNING_RIGHT)
-        } else if (!input.keys.includes('z') && this.game.player.onGround()) {
+        } else if (!input.keys.includes(KEYS.fire) && this.game.player.onGround()) {
             this.game.player.setState(states.FALLING_RIGHT)
         }
     }
@@ -449,11 +450,11 @@ export class HitRight extends State {
         if (this.game.player.frameX >= this.game.player.maxFrame && this.game.player.onGround()) {
             this.game.player.setState(states.STANDING_RIGHT);
             this.game.player.spriteWidth = 75;
-            input.deleteKey('z');
+            input.deleteKey(KEYS.fire);
         } else if (this.game.player.frameX >= this.game.player.maxFrame && !this.game.player.onGround()) {
             this.game.player.setState(states.FALLING_RIGHT);
             this.game.player.spriteWidth = 75;
-            input.deleteKey('z');
+            input.deleteKey(KEYS.fire);
         }
     }
 }
@@ -480,10 +481,10 @@ export class HitLeft extends State {
           this.game.player.x - 100, this.game.player.y))
         if (this.game.player.frameX >= this.game.player.maxFrame && this.game.player.onGround()) {
             this.game.player.setState(states.RUNNING_LEFT);
-            input.deleteKey('z')
+            input.deleteKey(KEYS.fire)
         } else if (this.game.player.frameX >= this.game.player.maxFrame && !this.game.player.onGround()) {
             this.game.player.setState(states.FALLING_LEFT);
-            input.deleteKey('z')
+            input.deleteKey(KEYS.fire)
         }
     }
 }
@@ -515,7 +516,7 @@ export class ChargeRight extends State {
         ))
 
         if (this.game.player.chargeDistance <= 5) {
-            input.deleteKey('x');
+            input.deleteKey(KEYS.charge);
             this.game.player.makeUnvulnerable();
             if (this.game.player.onGround()) {
                 this.game.player.setState(states.RUNNING_RIGHT);
@@ -549,7 +550,7 @@ export class ChargeLeft extends State {
         ))
 
         if (this.game.player.chargeDistance >= -5) {
-            input.deleteKey('x')
+            input.deleteKey(KEYS.charge)
             this.game.player.makeUnvulnerable();
             if (this.game.player.onGround()) {
                 this.game.player.setState(states.RUNNING_LEFT)
@@ -566,12 +567,12 @@ class JumpHandler {
         this.game = game
     }
     handle(input) {
-        if (input.keys.indexOf('ArrowLeft') === -1 &&
-            input.keys.indexOf('ArrowRight') === -1) {
+        if (input.keys.indexOf(KEYS.left) === -1 &&
+            input.keys.indexOf(KEYS.right) === -1) {
             this.game.player.speed = 0;
-        } else if (input.keys.includes('ArrowRight')) {
+        } else if (input.keys.includes(KEYS.right)) {
             this.game.player.speed = this.game.player.maxSpeed * 0.5;
-        } else if (input.keys.includes('ArrowLeft')) {
+        } else if (input.keys.includes(KEYS.left)) {
             this.game.player.speed = -this.game.player.maxSpeed * 0.5;
         }
     }

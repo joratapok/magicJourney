@@ -16,10 +16,10 @@ window.addEventListener('load', function () {
             this.touchY = '';
             this.touchTreshold = 30;
             window.addEventListener('keydown', (e) => {
-                if ((e.key === 'ArrowDown' ||
-                    e.key === 'ArrowUp' ||
-                    e.key === 'ArrowLeft' ||
-                    e.key === 'ArrowRight')
+                if ((e.key === KEYS.down ||
+                    e.key === KEYS.up ||
+                    e.key === KEYS.left ||
+                    e.key === KEYS.right)
                     && this.keys.indexOf(e.key) === -1) {
                     this.keys.push(e.key)
                 } else if (e.key === 'Enter' && gameOver === true) {
@@ -27,10 +27,10 @@ window.addEventListener('load', function () {
                 }
             })
             window.addEventListener('keyup', (e) => {
-                if (e.key === 'ArrowDown' ||
-                    e.key === 'ArrowUp' ||
-                    e.key === 'ArrowLeft' ||
-                    e.key === 'ArrowRight') {
+                if (e.key === KEYS.down ||
+                    e.key === KEYS.up ||
+                    e.key === KEYS.left ||
+                    e.key === KEYS.right) {
                     this.keys.splice(this.keys.indexOf(e.key), 1)
                 }
             })
@@ -114,14 +114,14 @@ window.addEventListener('load', function () {
             }
 
             //inputs handle
-            if (input.keys.indexOf('ArrowRight') > -1) {
+            if (input.keys.indexOf(KEYS.right) > -1) {
                 this.speed = 1.5;
-            } else  if (input.keys.indexOf('ArrowLeft') > -1) {
+            } else  if (input.keys.indexOf(KEYS.left) > -1) {
                 this.speed = -1;
             } else {
                 this.speed = 0;
             }
-            if ((input.keys.indexOf('ArrowUp') > -1 || input.keys.indexOf('swipe up') > -1) && this.onGround()) {
+            if ((input.keys.indexOf(KEYS.up) > -1 || input.keys.indexOf('swipe up') > -1) && this.onGround()) {
                 this.vy -= 30;
             }
 
